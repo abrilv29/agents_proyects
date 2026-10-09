@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diario de Estudio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="hoja">
+    <header class="cabecera">
+      <h1>Diario de Estudio</h1>
+      <p>Anota cada sesión y mira cómo crece tu racha.</p>
+    </header>
+
+    <section class="heroe" aria-live="polite">
+      <div class="heroe-racha">
+        <p class="racha-linea">
+          <span class="racha-numero" id="racha-numero">0</span>
+          <span class="racha-emoji" aria-hidden="true">🔥</span>
+        </p>
+        <p class="racha-texto" id="racha-texto">Empieza hoy tu primera racha</p>
+      </div>
+      <div class="heroe-mapa">
+        <div class="cuadricula-cabecera" aria-hidden="true">
+          <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+        </div>
+        <div class="cuadricula" id="cuadricula" role="group" aria-label="Últimos 28 días"></div>
+        <p class="cuadricula-pie">Últimos 28 días</p>
+        <ul class="leyenda" aria-label="Leyenda de intensidad">
+          <li><span class="leyenda-muestra nivel-1" aria-hidden="true"></span>1-30 min</li>
+          <li><span class="leyenda-muestra nivel-2" aria-hidden="true"></span>31-60 min</li>
+          <li><span class="leyenda-muestra nivel-3" aria-hidden="true"></span>61-120 min</li>
+          <li><span class="leyenda-muestra nivel-4" aria-hidden="true"></span>121+ min</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="resumen" aria-live="polite">
+      <div class="dato">
+        <p class="dato-titulo">Esta semana</p>
+        <p class="dato-linea">
+          <span class="dato-numero" id="semana-minutos">0 min</span>
+          <span class="dato-emoji" aria-hidden="true">📚</span>
+        </p>
+        <p class="dato-pie" id="semana-texto">Sin sesiones esta semana</p>
+      </div>
+      <div class="objetivo">
+        <h2 class="dato-titulo">Objetivo semanal</h2>
+        <div class="campo">
+          <label for="objetivo-minutos">Objetivo semanal (minutos)</label>
+          <input type="text" id="objetivo-minutos" inputmode="numeric" autocomplete="off">
+        </div>
+        <button type="button" id="objetivo-guardar" title="Guardar objetivo" aria-label="Guardar objetivo"><img class="boton-icono" src="assets/guardar.png" alt=""></button>
+        <p class="objetivo-invitacion" id="objetivo-invitacion">Fija tu objetivo semanal</p>
+        <div class="objetivo-barra" id="objetivo-barra" role="progressbar" aria-label="Progreso del objetivo semanal" aria-valuemin="0" aria-valuenow="0">
+          <div class="objetivo-relleno" id="objetivo-relleno"></div>
+        </div>
+        <p class="objetivo-progreso" id="objetivo-progreso"></p>
+        <p class="mensaje" id="mensaje-objetivo" hidden></p>
+      </div>
+      <div class="dato">
+        <p class="dato-titulo">Este mes</p>
+        <p class="dato-linea">
+          <span class="dato-numero" id="mes-dias">0</span>
+          <span class="dato-emoji" aria-hidden="true">📅</span>
+        </p>
+        <p class="dato-pie" id="mes-texto">Sin sesiones aún</p>
+      </div>
+      <div class="dato">
+        <p class="dato-titulo">Mejor racha</p>
+        <p class="dato-linea">
+          <span class="dato-numero" id="mejor-racha-numero">0</span>
+          <span class="dato-emoji" aria-hidden="true">🏆</span>
+        </p>
+        <p class="dato-pie" id="mejor-racha-texto">Aún sin récord</p>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>Nueva sesión</h2>
+      <form id="formulario-sesion">
+        <div class="campos">
+          <div class="campo">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" required>
+          </div>
+          <div class="campo">
+            <label for="tema">Tema</label>
+            <input type="text" id="tema" name="tema" placeholder="Álgebra, Historia..." required>
+          </div>
+          <div class="campo">
+            <label for="minutos">Minutos</label>
+            <input type="number" id="minutos" name="minutos" min="1" step="1" placeholder="45" required>
+          </div>
+        </div>
+        <button type="submit"><img class="boton-icono" src="assets/guardar.png" alt="">Guardar sesión</button>
+        <p class="mensaje" id="mensaje" hidden></p>
+      </form>
+    </section>
+
+    <section class="bloque">
+      <h2>Sesiones</h2>
+      <p class="vacio" id="vacio">Aún no hay sesiones. Registra la primera para empezar tu racha.</p>
+      <ul class="lista" id="lista-sesiones"></ul>
+    </section>
+  </main>
+
+  <script src="stats.js"></script>
+  <script src="goals.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

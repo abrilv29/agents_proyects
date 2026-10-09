@@ -1,0 +1,622 @@
+:root {
+  --papel: #ffffff;
+  --linea: #dde5ec;
+  --tinta: #22303f;
+  --tinta-clara: #55697a;
+  --marca: #f2b33d;
+  --marca-borde: #dda42b;
+  --marca-suave: #fdf1d4;
+  --acierto: #1f6f5c;
+  --error: #b4442f;
+
+  --fuente-texto: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fuente-titulo: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--tinta);
+  font-family: var(--fuente-texto);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+
+.hoja {
+  max-width: 680px;
+  margin: 32px auto;
+  padding: 0;
+  background-color: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  box-shadow: 0 22px 45px -30px rgba(34, 48, 63, 0.55);
+  overflow: hidden;
+}
+
+.hoja > * + * {
+  border-top: 1px solid var(--linea);
+}
+
+.cabecera {
+  padding: 30px 32px 26px;
+}
+
+.cabecera h1 {
+  margin: 0 0 6px;
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.cabecera p {
+  margin: 0;
+  color: var(--tinta-clara);
+  font-size: 0.95rem;
+}
+
+.heroe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: 30px 32px;
+}
+
+.heroe-racha {
+  min-width: 150px;
+}
+
+.racha-linea {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+}
+
+.racha-numero {
+  font-family: var(--fuente-titulo);
+  font-size: clamp(3.25rem, 14vw, 5.5rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.racha-emoji {
+  font-size: clamp(1.6rem, 7vw, 2.6rem);
+  line-height: 1;
+}
+
+.racha-texto {
+  margin: 12px 0 0;
+  max-width: 22ch;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.heroe-mapa {
+  flex: 1 1 260px;
+  max-width: 340px;
+  min-width: 240px;
+}
+
+.cuadricula-cabecera,
+.cuadricula {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.cuadricula-cabecera {
+  margin-bottom: 6px;
+}
+
+.cuadricula-cabecera span {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--tinta-clara);
+}
+
+.celda {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid #cfdce8;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.celda-hoy {
+  box-shadow: 0 0 0 2px var(--tinta);
+}
+
+.celda-futura {
+  border-style: dashed;
+  border-color: #dbe4ec;
+}
+
+.cuadricula-pie {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--tinta-clara);
+}
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.72rem;
+  color: var(--tinta-clara);
+}
+
+.leyenda li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.leyenda-muestra {
+  width: 12px;
+  height: 12px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+
+.nivel-1 {
+  background: #fdeecd;
+  border-color: #f2dcae;
+}
+
+.nivel-2 {
+  background: #f9d488;
+  border-color: #eebd62;
+}
+
+.nivel-3 {
+  background: var(--marca);
+  border-color: var(--marca-borde);
+}
+
+.nivel-4 {
+  background: #dd8f16;
+  border-color: #c47c0c;
+}
+
+.celda::after {
+  content: attr(data-etiqueta);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: var(--tinta);
+  color: var(--papel);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  border-radius: 3px;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.celda:hover::after,
+.celda:focus::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.celda-animar {
+  animation: marcar 0.3s ease-out both;
+  animation-delay: calc(var(--i, 0) * 22ms);
+}
+
+@keyframes marcar {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.dato {
+  padding: 22px 24px;
+}
+
+.dato + .dato {
+  border-left: 1px solid var(--linea);
+}
+
+/* Entre «Esta semana» y «Este mes» ahora está .objetivo, así que el
+   selector de arriba ya no les da filete: se lo devolvemos aquí. */
+.objetivo + .dato {
+  border-left: 1px solid var(--linea);
+}
+
+.dato-titulo {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tinta-clara);
+}
+
+.dato-linea {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0;
+}
+
+.dato-numero {
+  font-family: var(--fuente-titulo);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.dato-emoji {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.dato-pie {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--tinta-clara);
+}
+
+/* Objetivo semanal: fila completa bajo los tres datos, con regla
+   separadora. «La línea de compromiso»: título, campo y botón en una
+   misma línea y, debajo, la invitación o la barra. Sin tarjeta ni
+   colores nuevos: mismos rótulos y campos, ámbar solo en el relleno. */
+.objetivo {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  column-gap: 12px;
+  align-items: end;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding: 22px 24px;
+  border-top: 1px solid var(--linea);
+}
+
+/* Lo que ocupa el ancho completo del bloque (la fila de campo y botón
+   la ocupa el propio .campo, en la columna de la izquierda) */
+.objetivo-invitacion,
+.objetivo-barra,
+.objetivo-progreso,
+.objetivo .mensaje {
+  grid-column: 1 / -1;
+}
+
+/* El título se lee como título de sección (gana a .dato-titulo) */
+.objetivo h2 {
+  grid-column: 1 / -1;
+  margin: 0 0 14px;
+  font-family: var(--fuente-titulo);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+/* La fila es ancha: campo y botón se quedan con un ancho cómodo */
+.objetivo .campo {
+  max-width: 300px;
+}
+
+/* Botón solo-icono: cuadrado, a la altura del campo, sin texto.
+   Blanco con filete de tinta para no gritar más que el campo. */
+.objetivo button {
+  width: 42px;
+  height: 42px;
+  margin-top: 0;
+  padding: 0;
+  justify-self: start;
+  background: var(--papel);
+  border: 1.5px solid var(--tinta);
+}
+
+/* Con el ratón se invierte como los otros botones: fondo tinta, icono blanco */
+.objetivo button:hover,
+.objetivo button:active {
+  background: var(--tinta);
+}
+
+/* En hover el PNG blanco ya no necesita tinte: se ve tal cual */
+.objetivo button:hover .boton-icono,
+.objetivo button:active .boton-icono {
+  filter: none;
+}
+
+/* El PNG es blanco y el botón también: brightness(0) lo pinta de negro.
+   (No usar `mask` aquí: en file:// las máscaras CSS piden CORS y fallan.) */
+.objetivo .boton-icono {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0);
+}
+
+.objetivo-invitacion {
+  margin: 14px 0 0;
+  color: var(--tinta-clara);
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.objetivo-barra {
+  height: 12px;
+  margin-top: 16px;
+  background: var(--linea);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* Que el atributo hidden siga mandando aunque la barra tenga display */
+.objetivo-barra[hidden] {
+  display: none;
+}
+
+/* El ancho lo escribe app.js con el porcentaje de progreso */
+.objetivo-relleno {
+  width: 0;
+  height: 100%;
+  background: var(--marca);
+  border-radius: 3px;
+  transition: width 0.3s ease-out;
+}
+
+.objetivo-progreso {
+  margin: 10px 0 0;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(1.5rem, 5.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.bloque {
+  padding: 26px 32px;
+}
+
+.bloque h2 {
+  margin: 0 0 18px;
+  font-family: var(--fuente-titulo);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: 1.3fr 1.5fr 0.8fr;
+  gap: 18px;
+}
+
+.campo {
+  min-width: 0;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tinta-clara);
+}
+
+.campo input {
+  width: 100%;
+  padding: 8px 4px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--tinta);
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-bottom: 1.5px solid #cfdce8;
+  border-radius: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo input:focus {
+  outline: none;
+  border-bottom-color: var(--tinta);
+  box-shadow: 0 1px 0 0 var(--tinta);
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 22px;
+  padding: 13px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--papel);
+  background: var(--tinta);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+/* Icono de guardar: PNG blanco de 32 px sobre el botón tinta. Decorativo,
+   el texto del botón ya nombra la acción (alt vacío). 16 px = mitad exacta
+   del original, así el borde anti-aliased sigue limpio. */
+.boton-icono {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+button:hover {
+  background: #2f4256;
+}
+
+button:active {
+  background: #1a2634;
+}
+
+.mensaje {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.mensaje-ok {
+  background: #e7f4ef;
+  color: var(--acierto);
+}
+
+.mensaje-error {
+  background: #fbeae6;
+  color: var(--error);
+}
+
+.vacio {
+  margin: 0;
+  color: var(--tinta-clara);
+  font-size: 0.95rem;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.lista li:last-child {
+  border-bottom: none;
+}
+
+.sesion-izquierda {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sesion-fecha {
+  font-size: 0.78rem;
+  color: var(--tinta-clara);
+  text-transform: capitalize;
+}
+
+.sesion-tema {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.sesion-minutos {
+  flex-shrink: 0;
+  font-family: var(--fuente-titulo);
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sesion-nueva {
+  animation: nueva 1.1s ease-out;
+}
+
+@keyframes nueva {
+  from {
+    background: var(--marca-suave);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hoja {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+
+  .cabecera,
+  .heroe,
+  .bloque {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .heroe {
+    gap: 26px;
+  }
+
+  .resumen {
+    grid-template-columns: 1fr;
+  }
+
+  /* Una sola columna: el bloque se apila en su orden de la página,
+     justo detrás de «Esta semana». */
+  .objetivo {
+    grid-column: auto;
+    grid-row: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .dato + .dato,
+  .objetivo + .dato {
+    border-left: none;
+    border-top: 1px solid var(--linea);
+  }
+
+  .objetivo .campo {
+    max-width: none;
+  }
+
+  .campos {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
