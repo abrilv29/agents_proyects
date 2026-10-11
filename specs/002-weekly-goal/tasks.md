@@ -1,10 +1,11 @@
 # Tareas — Spec 002: objetivo semanal
 
-Orden de dependencia. Cada tarea es de 20–30 min como máximo. Estado: T1–T11 cerradas
+Orden de dependencia. Cada tarea es de 20–30 min como máximo. Estado: T1–T13 cerradas
 (implementación y verificación hechas el 08/10/2026; validación con `@reviewer` el
-08/10/2026 con veredicto APROBADO y `node --test` 42/42; T11 = rediseño visual aprobado
-el 08/10/2026). Tests primero en la lógica: `node --test` en verde antes de cerrar cada
-tarea.
+08/10/2026 con veredicto APROBADO y `node --test` 42/42; T11 = rediseño visual, T12 =
+«Barra de proceso semanal» y T13 = botón del objetivo al estilo selector de calendario,
+los tres aprobados el 08/10/2026). Tests primero en la lógica: `node --test` en verde
+antes de cerrar cada tarea.
 
 - [x] **T1 — Claves de semana en `goals.js` (`getMondayKey`, `getSaveTargetKey`) con
   export condicional y sus tests.** RF: RF-3, RF-4; RNF-2, RNF-5, RNF-3.
@@ -89,3 +90,31 @@ tarea.
   tinta-clara 5,69:1), consola limpia y localStorage sin datos de prueba. Sin tocar
   `index.html` ni JS. Capturas: `diseno-objetivo-vacio.png`,
   `diseno-objetivo-activo.png`, `diseno-375px.png`.
+
+- [x] **T12 — Rediseño del bloque pedido por el usuario: formulario en una fila,
+  columna de resultado con título y sin invitación (`index.html`, `styles.css`,
+  `app.js`).** RF-1, RF-5 (aspecto de la interfaz); RNF-6, RNF-7, RNF-8.
+  Hecho cuando: campo y botón comparten fila dentro de `.objetivo-formulario`
+  (columna de 300 px: input 252 + hueco 12 + botón 36), la etiqueta pasa a «Fija tu
+  objetivo semanal (minutos)» con `placeholder="100 min"`, la invitación desaparece de
+  HTML, CSS y JS, y sin objetivo vigente la columna derecha entera
+  (`.objetivo-resultado`: título «Barra de proceso semanal», barra con el porcentaje
+  al final a 20 px y los minutos a 16 px) queda oculta; con objetivo se muestra y
+  `aria-valuetext` conserva «X de Y min (Z%)». Verificado el 08/10/2026: `node --test`
+  42/42, navegador a 1280 y 375 px sin desbordes, D6 intacto («Se aplicará el lunes
+  que viene»), consola limpia y localStorage vacío al final. **Pendiente de aprobación**:
+  la enmienda de `spec.md`/`plan.md` (RF-1 CA, RF-4, RF-6 y la decisión 5 siguen
+  citando la invitación y el texto «X de Y min (Z%)»).
+
+- [x] **T13 — Botón «Guardar objetivo» al estilo selector del calendario, solo
+  `styles.css`.** RF-1 (CA de la interfaz); RNF-7, RNF-8.
+  Hecho cuando: `.objetivo-formulario` pinta el subrayado compartido (`gap: 0` y
+  `border-bottom` continuo bajo campo Y botón, `:focus-within` lo oscurece al enfocar),
+  el input del objetivo no pinta el suyo (reglas scoped a `.objetivo-formulario`, los
+  inputs de sesión no cambian), el botón queda al ras: 36×41 px con fondo transparente,
+  sin borde exterior y solo `border-left` de filete vertical, y SIN efecto hover/active
+  (se anula la regla global `button:hover` sin tocar la de los demás botones); el
+  icono sigue en tinta a 15 px (`filter: none`). Verificado el 08/10/2026: `node --test`
+  42/42, geometría en navegador (gap 0, input 40,8 px / botón 41 px con el mismo pie,
+  subrayado continuo), hover y focus comprobados con el ratón y el foco, «Guardar
+  sesión» con su hover intacto, consola limpia y sin desbordes a 1280 y 375 px.

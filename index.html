@@ -47,16 +47,23 @@
       </div>
       <div class="objetivo">
         <h2 class="dato-titulo">Objetivo semanal</h2>
-        <div class="campo">
-          <label for="objetivo-minutos">Objetivo semanal (minutos)</label>
-          <input type="text" id="objetivo-minutos" inputmode="numeric" autocomplete="off">
+        <div class="objetivo-formulario">
+          <div class="campo">
+            <label for="objetivo-minutos">Fija tu objetivo semanal (minutos)</label>
+            <input type="text" id="objetivo-minutos" inputmode="numeric" autocomplete="off" placeholder="100 min">
+          </div>
+          <button type="button" id="objetivo-guardar" title="Guardar objetivo" aria-label="Guardar objetivo"><img class="boton-icono" src="assets/guardar.png" alt=""></button>
         </div>
-        <button type="button" id="objetivo-guardar" title="Guardar objetivo" aria-label="Guardar objetivo"><img class="boton-icono" src="assets/guardar.png" alt=""></button>
-        <p class="objetivo-invitacion" id="objetivo-invitacion">Fija tu objetivo semanal</p>
-        <div class="objetivo-barra" id="objetivo-barra" role="progressbar" aria-label="Progreso del objetivo semanal" aria-valuemin="0" aria-valuenow="0">
-          <div class="objetivo-relleno" id="objetivo-relleno"></div>
+        <div class="objetivo-resultado" id="objetivo-resultado" hidden>
+          <h3 class="objetivo-subtitulo">Barra de proceso semanal</h3>
+          <div class="objetivo-barra-fila">
+            <div class="objetivo-barra" id="objetivo-barra" role="progressbar" aria-label="Progreso del objetivo semanal" aria-valuemin="0" aria-valuenow="0">
+              <div class="objetivo-relleno" id="objetivo-relleno"></div>
+            </div>
+            <span class="objetivo-porcentaje" id="objetivo-porcentaje"></span>
+          </div>
+          <p class="objetivo-progreso" id="objetivo-progreso"></p>
         </div>
-        <p class="objetivo-progreso" id="objetivo-progreso"></p>
         <p class="mensaje" id="mensaje-objetivo" hidden></p>
       </div>
       <div class="dato">
@@ -94,7 +101,7 @@
             <input type="number" id="minutos" name="minutos" min="1" step="1" placeholder="45" required>
           </div>
         </div>
-        <button type="submit"><img class="boton-icono" src="assets/guardar.png" alt="">Guardar sesión</button>
+        <button type="submit">Guardar sesión</button>
         <p class="mensaje" id="mensaje" hidden></p>
       </form>
     </section>

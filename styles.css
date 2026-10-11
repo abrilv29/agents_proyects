@@ -290,32 +290,28 @@ body {
 }
 
 /* Objetivo semanal: fila completa bajo los tres datos, con regla
-   separadora. «La línea de compromiso»: título, campo y botón en una
-   misma línea y, debajo, la invitación o la barra. Sin tarjeta ni
-   colores nuevos: mismos rótulos y campos, ámbar solo en el relleno. */
+   separadora. Dos columnas en la misma fila: a la izquierda el formulario
+   (campo y botón en una sola fila); a la derecha el resultado (título, barra
+   con el porcentaje al final y los minutos debajo). Sin objetivo, la columna
+   derecha entera queda oculta. Sin tarjeta ni colores nuevos: ámbar solo en
+   el relleno. */
 .objetivo {
   display: grid;
-  grid-template-columns: minmax(0, 300px) 1fr;
-  column-gap: 12px;
-  align-items: end;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  column-gap: 28px;
+  align-items: start;
   grid-column: 1 / -1;
   grid-row: 2;
   padding: 22px 24px;
   border-top: 1px solid var(--linea);
 }
 
-/* Lo que ocupa el ancho completo del bloque (la fila de campo y botón
-   la ocupa el propio .campo, en la columna de la izquierda) */
-.objetivo-invitacion,
-.objetivo-barra,
-.objetivo-progreso,
-.objetivo .mensaje {
-  grid-column: 1 / -1;
-}
-
+/* El mapa de la rejilla: título arriba; formulario y resultado en la
+   siguiente; el mensaje va debajo de todo. */
 /* El título se lee como título de sección (gana a .dato-titulo) */
 .objetivo h2 {
   grid-column: 1 / -1;
+  grid-row: 1;
   margin: 0 0 14px;
   font-family: var(--fuente-titulo);
   font-size: 1.2rem;
@@ -323,62 +319,115 @@ body {
   color: var(--tinta);
 }
 
-/* La fila es ancha: campo y botón se quedan con un ancho cómodo */
-.objetivo .campo {
-  max-width: 300px;
+/* Campo y botón en la misma fila, alineados por abajo y sin hueco entre
+   ellos: van sin separación, como una sola pieza continua. El subrayado lo
+   pinta el formulario: es continuo bajo el campo Y bajo el botón. El campo
+   cede espacio para que quepan en ~300 px. */
+.objetivo-formulario {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  border-bottom: 1.5px solid #cfdce8;
 }
 
-/* Botón solo-icono: cuadrado, a la altura del campo, sin texto.
-   Blanco con filete de tinta para no gritar más que el campo. */
+/* El subrayado compartido se oscurece al enfocar el campo */
+.objetivo-formulario:focus-within {
+  border-bottom-color: var(--tinta);
+}
+
+.objetivo-formulario .campo {
+  flex: 1;
+  min-width: 0;
+}
+
+/* El subrayado lo pinta el formulario, no el input (scoped: los inputs del
+   formulario de sesión conservan el suyo). */
+.objetivo-formulario .campo input {
+  border-bottom: none;
+}
+
+.objetivo-formulario .campo input:focus {
+  box-shadow: none;
+  border-bottom-color: transparent;
+}
+
+/* Columna derecha: título, barra con porcentaje y minutos. Oculta mientras
+   no haya objetivo vigente. */
+.objetivo-resultado {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Que el atributo hidden siga mandando aunque algún hijo tenga display */
+.objetivo-resultado[hidden] {
+  display: none;
+}
+
+/* Botón al ras del campo: sin caja propia y sin ninguna línea que lo
+   separe, campo y botón se leen como una sola superficie. Sin hover. El
+   subrayado lo pinta el formulario, así que aquí no hace falta. margin-top:
+   0 anula el margin-top: 22px de la regla global `button`. */
 .objetivo button {
-  width: 42px;
-  height: 42px;
+  flex: none;
+  /* Ancho de la franja del calendario nativo (~26 px), no el de un botón */
+  width: 26px;
+  height: 41px;
   margin-top: 0;
   padding: 0;
-  justify-self: start;
-  background: var(--papel);
-  border: 1.5px solid var(--tinta);
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-/* Con el ratón se invierte como los otros botones: fondo tinta, icono blanco */
+.objetivo .mensaje {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+/* Sin efecto hover ni active (el usuario lo pidió): aquí se anula la regla
+   global `button:hover` / `button:active`, que en este botón dejaría el
+   fondo oscuro. El resto de botones no se toca. */
 .objetivo button:hover,
 .objetivo button:active {
-  background: var(--tinta);
+  background: transparent;
 }
 
-/* En hover el PNG blanco ya no necesita tinte: se ve tal cual */
-.objetivo button:hover .boton-icono,
-.objetivo button:active .boton-icono {
+/* No usar `mask` para recolorear este PNG: en file:// las máscaras CSS
+   piden CORS y la petición sale con net::ERR_FAILED (icono invisible). */
+/* Icono pequeño (15 px) centrado dentro del botón */
+.objetivo .boton-icono {
+  width: 15px;
+  height: 15px;
+  /* El fondo del botón es transparente y el PNG ya trae tinta: sin filtro.
+     (Gana a la regla general .boton-icono, que dejaría el icono blanco.) */
   filter: none;
 }
 
-/* El PNG es blanco y el botón también: brightness(0) lo pinta de negro.
-   (No usar `mask` aquí: en file:// las máscaras CSS piden CORS y fallan.) */
-.objetivo .boton-icono {
-  width: 18px;
-  height: 18px;
-  filter: brightness(0);
+/* Subtítulo de la columna derecha: lee como derivado del título grande */
+.objetivo-subtitulo {
+  margin: 0 0 8px;
+  font-family: var(--fuente-titulo);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tinta);
 }
 
-.objetivo-invitacion {
-  margin: 14px 0 0;
-  color: var(--tinta-clara);
-  font-family: var(--fuente-titulo);
-  font-style: italic;
-  font-size: 1rem;
+/* Barra y porcentaje en la misma fila: la barra ocupa el hueco y el
+   porcentaje queda pegado a su final. */
+.objetivo-barra-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .objetivo-barra {
+  flex: 1;
   height: 12px;
-  margin-top: 16px;
   background: var(--linea);
   border-radius: 3px;
   overflow: hidden;
-}
-
-/* Que el atributo hidden siga mandando aunque la barra tenga display */
-.objetivo-barra[hidden] {
-  display: none;
 }
 
 /* El ancho lo escribe app.js con el porcentaje de progreso */
@@ -390,13 +439,21 @@ body {
   transition: width 0.3s ease-out;
 }
 
-.objetivo-progreso {
-  margin: 10px 0 0;
+/* Porcentaje al final de la barra: cifra en serif, discreta (14 px, 0,875 de la base) */
+.objetivo-porcentaje {
+  flex: none;
   font-family: var(--fuente-titulo);
-  font-size: clamp(1.5rem, 5.5vw, 1.75rem);
+  font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--tinta);
+}
+
+/* Minutos debajo de la barra, a 14 px (0,875 de la base) y en tinta clara */
+.objetivo-progreso {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  color: var(--tinta-clara);
 }
 
 .bloque {
@@ -466,13 +523,16 @@ button {
   transition: background 0.15s;
 }
 
-/* Icono de guardar: PNG blanco de 32 px sobre el botón tinta. Decorativo,
-   el texto del botón ya nombra la acción (alt vacío). 16 px = mitad exacta
-   del original, así el borde anti-aliased sigue limpio. */
+/* Icono de guardar: PNG de 32 px con trazo tinta. Decorativo, lo nombra el
+   aria-label del botón (alt vacío). 16 px = mitad exacta del original.
+   brightness(0) invert(1) es la base para iconos sobre fondo tinta; el botón
+   del objetivo la anula con filter: none (su fondo es transparente y el PNG
+   ya trae tinta). (Solo lo usa el botón del objetivo.) */
 .boton-icono {
   width: 16px;
   height: 16px;
   flex: none;
+  filter: brightness(0) invert(1);
 }
 
 button:hover {
@@ -597,22 +657,34 @@ button:active {
     grid-template-columns: 1fr;
   }
 
-  /* Una sola columna: el bloque se apila en su orden de la página,
-     justo detrás de «Esta semana». */
+  /* En una sola columna el formulario va primero (campo y botón en su
+     fila) y el resultado se apila debajo, a todo el ancho. */
   .objetivo {
     grid-column: auto;
     grid-row: auto;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .objetivo-formulario {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .objetivo-resultado {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 16px;
+  }
+
+  .objetivo .mensaje {
+    grid-column: 1;
+    grid-row: 4;
   }
 
   .dato + .dato,
   .objetivo + .dato {
     border-left: none;
     border-top: 1px solid var(--linea);
-  }
-
-  .objetivo .campo {
-    max-width: none;
   }
 
   .campos {

@@ -24,7 +24,8 @@ const mensajeObjetivo = document.getElementById("mensaje-objetivo");
 const barraObjetivo = document.getElementById("objetivo-barra");
 const rellenoObjetivo = document.getElementById("objetivo-relleno");
 const progresoObjetivo = document.getElementById("objetivo-progreso");
-const invitacionObjetivo = document.getElementById("objetivo-invitacion");
+const resultadoObjetivo = document.getElementById("objetivo-resultado");
+const porcentajeObjetivo = document.getElementById("objetivo-porcentaje");
 
 let sesiones = cargarSesiones();
 let mejorRacha = cargarMejorRacha();
@@ -361,35 +362,37 @@ function mostrarSesiones() {
 }
 
 // Paints the goal block for the current week (always from the monday key of
-// today): with a live goal the bar plus its text (RF-5), without one just the
-// invitation (RF-6). The field is never touched here (plan, decision 5).
+// today): with a live goal the result column shows title, bar, percent and
+// minutes (RF-5); without one that whole column stays hidden. The field is
+// never touched here (plan, decision 5).
 function mostrarObjetivo() {
   const hoy = new Date();
   const almacen = parseGoalStore(localStorage.getItem(CLAVE_OBJETIVOS));
   const objetivo = readGoal(almacen, getMondayKey(hoy));
 
   if (objetivo === null) {
-    barraObjetivo.hidden = true;
-    progresoObjetivo.textContent = "";
-    invitacionObjetivo.hidden = false;
+    resultadoObjetivo.hidden = true;
     return;
   }
 
   const minutos = calcularMinutosSemana();
   const progreso = getProgress(minutos, objetivo);
   // Over the goal the text stays "Objetivo cumplido": no excess, no >100%.
-  const texto = progreso.completed
+  const textoCompleto = progreso.completed
     ? "Objetivo cumplido"
     : `${minutos} de ${objetivo} min (${progreso.percent}%)`;
+  const textoMinutos = progreso.completed
+    ? "Objetivo cumplido"
+    : `${minutos} de ${objetivo} min`;
 
   rellenoObjetivo.style.width = progreso.percent + "%"; // CSS default is 0
-  barraObjetivo.hidden = false;
+  resultadoObjetivo.hidden = false;
   barraObjetivo.setAttribute("aria-valuemin", "0");
   barraObjetivo.setAttribute("aria-valuemax", String(objetivo));
   barraObjetivo.setAttribute("aria-valuenow", String(Math.min(minutos, objetivo)));
-  barraObjetivo.setAttribute("aria-valuetext", texto); // same text that is shown
-  progresoObjetivo.textContent = texto;
-  invitacionObjetivo.hidden = true;
+  barraObjetivo.setAttribute("aria-valuetext", textoCompleto); // full text for screen readers
+  porcentajeObjetivo.textContent = progreso.percent + "%";
+  progresoObjetivo.textContent = textoMinutos;
 }
 
 function actualizar() {
